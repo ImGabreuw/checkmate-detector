@@ -37,3 +37,30 @@ tcbdkbct-pppp1ppp-5c2-5p2-5P2-5C2-PPPP1PPP-TCBDKBCT
 - `5C2` (fileira 3: cinco casas vazias, cavalo branco, duas casas vazias).
 - `PPPP1PPP` (fileira 2: cinco peões brancos, uma casa vazia, dois peões brancos).
 - `TCBDKBCT` (fileira 1: torre, cavalo, bispo, rainha, rei, bispo, cavalo, torre brancos).
+
+
+## Algoritmo
+
+1. **Entrada de dados**: O programa recebe uma representação do tabuleiro como uma lista de strings, onde:
+   - Peças brancas são letras maiúsculas (R, P, C, B, D, T)
+   - Peças pretas são letras minúsculas (r, p, c, b, d, t)
+   - Números representam sequências de casas vazias
+
+2. **Processamento do tabuleiro**:
+   - A função `parseBoard` converte a representação em uma matriz de caracteres
+   - Números são expandidos para sequências de '#' (casas vazias)
+   - A função `findKingPosition` localiza a posição do rei branco ('R')
+
+3. **Verificação de xeque**:
+   - Para cada posição contendo uma peça preta no tabuleiro:
+     - Verifica se essa peça pode atacar o rei branco
+     - As regras de movimento são implementadas para cada tipo de peça
+
+4. **Regras de movimento**:
+   - Para peões, torres, cavalos, bispos, rainhas e reis pretos
+   - Considera obstáculos no caminho para peças como torres, bispos e rainhas
+   - Usa a função `hasPieceBetween` para verificar se há peças entre o atacante e o rei branco
+
+5. **Resultado**:
+   - Retorna `True` se qualquer peça preta puder atacar o rei branco
+   - Retorna `False` caso contrário
