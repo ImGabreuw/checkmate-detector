@@ -1,6 +1,7 @@
 import System.IO
 
 type Position = (Int, Int)
+
 type Board = [[Char]]
 
 main :: IO ()
@@ -13,10 +14,12 @@ main = do
 
 -- Verifica se o rei branco está em xeque
 isCheck :: [String] -> Bool
-isCheck boardRaw = isKingInCheck board kingPos
+isCheck boardRaw =
+  case findKingPosition board of
+    (kingRow, kingCol) ->
+      not (kingRow == -1 || kingCol == -1) && isKingInCheck board (kingRow, kingCol) -- Verifica se o rei está em xeque
   where
     board = parseBoard boardRaw
-    kingPos = findKingPosition board
 
 -- Converte a representação do tabuleiro em uma matriz de caracteres
 parseBoard :: [String] -> Board
@@ -32,12 +35,13 @@ expandLine (c : cs)
 -- Encontra a posição do rei branco no tabuleiro
 findKingPosition :: Board -> Position
 findKingPosition board =
-  head
-    [ (line, col)
-      | line <- [0 .. 7],
-        col <- [0 .. 7],
-        (board !! line !! col) == 'R'
-    ]
+  case [ (line, col)
+         | line <- [0 .. 7],
+           col <- [0 .. 7],
+           (board !! line !! col) == 'R'
+       ] of
+    [] -> (-1, -1) -- Rei não encontrado (posição inválida)
+    (pos : _) -> pos -- Retorna a primeira posição encontrada (posição do rei branco)
 
 -- Verifica se o rei branco está em xeque
 isKingInCheck :: Board -> Position -> Bool
