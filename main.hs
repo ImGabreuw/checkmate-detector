@@ -109,4 +109,7 @@ hasPieceBetween board (row1, col1) (row2, col2)
               [col1 + step col1 col2, col1 + 2 * step col1 col2 .. col2 - step col1 col2]
        in any (\(r, c) -> board !! r !! c /= '#') diagonal
   where
+    -- Lembrando que o tabuleiro começa na linha 8 e coluna 1 e termina na linha 1 e coluna 8
+    -- 1 = movimento crescente (para cima ou para a direita)
+    -- -1 = movimento decrescente (para baixo ou para a esquerda)
     step a b = if a < b then 1 else -1
