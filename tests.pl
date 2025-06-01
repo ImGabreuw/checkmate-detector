@@ -1,12 +1,10 @@
 :- [main].
 
 % ====================================================================
-% CASOS DE TESTE ROBUSTOS PARA DETECÇÃO DE XEQUE
+% CASOS DE TESTE PARA DETECÇÃO DE XEQUE
 % Aplicando técnicas de testagem de software:
 % 1. Teste de valores limite (boundary testing)
 % 2. Teste de partição de equivalência
-% 3. Teste de casos extremos
-% 4. Teste de robustez
 % ====================================================================
 
 % ===== TESTES BÁSICOS DE FUNCIONALIDADE =====
