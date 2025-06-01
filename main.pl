@@ -14,26 +14,19 @@ is_check(BoardRaw) :-
     KingCol \= -1,
     is_king_in_check(Board, KingRow, KingCol).
 
-% Converte a representação do tabuleiro em uma matriz
+% Converte a representação do tabuleiro em uma matriz de átomos
 parse_board([], []).
 parse_board([Line|RestLines], [ExpandedLine|RestBoard]) :-
-    atom_chars(Line, Chars),
-    expand_line(Chars, ExpandedLine),
+    expand_line(Line, ExpandedLine),
     parse_board(RestLines, RestBoard).
 
-% Expande uma linha, convertendo números em casas vazias ('#')
-expand_line([], []).
-expand_line([C|Cs], Result) :-
-    (char_type(C, digit) ->
-        char_code(C, Code),
-        Number is Code - 48,
-        replicate('#', Number, Spaces),
-        expand_line(Cs, RestResult),
-        append(Spaces, RestResult, Result)
-    ;
-        expand_line(Cs, RestResult),
-        Result = [C|RestResult]
-    ).
+% Expande uma linha: se for lista, mantém; se for número, expande para casas vazias
+expand_line(Line, Expanded) :-
+    is_list(Line), !,
+    Expanded = Line.
+expand_line(N, Expanded) :-
+    integer(N), N > 0, !,
+    replicate('#', N, Expanded).
 
 % Replica um elemento N vezes
 replicate(_, 0, []).
