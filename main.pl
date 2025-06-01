@@ -3,7 +3,7 @@
 % Gabriel Ken Kazama Geronazzo - 10418247 
 % Lucas Zanini da Silva        - 10417361
 
-% is_check(["tcbdrbct","pppppppp","8","8","8","8","PPPPPPPP","TCBDRBCT"]).
+% is_check([['t','c','b','r','d','b','c','t'],8,8,8,8,8,8,['T','C','B','D','R','B','C','T']]).
 % >> false.
 
 % Verifica se o rei branco está em xeque
@@ -20,13 +20,25 @@ parse_board([Line|RestLines], [ExpandedLine|RestBoard]) :-
     expand_line(Line, ExpandedLine),
     parse_board(RestLines, RestBoard).
 
-% Expande uma linha: se for lista, mantém; se for número, expande para casas vazias
+% Expande uma linha: se for lista, expande elementos; se for número, expande para casas vazias
 expand_line(Line, Expanded) :-
     is_list(Line), !,
-    Expanded = Line.
+    expand_list_elements(Line, Expanded).
 expand_line(N, Expanded) :-
     integer(N), N > 0, !,
     replicate('#', N, Expanded).
+
+% Expande elementos de uma lista (peças ou números)
+expand_list_elements([], []).
+expand_list_elements([Element|Rest], Result) :-
+    (integer(Element), Element > 0 ->
+        replicate('#', Element, ExpandedElement),
+        expand_list_elements(Rest, RestExpanded),
+        append(ExpandedElement, RestExpanded, Result)
+    ;
+        expand_list_elements(Rest, RestExpanded),
+        Result = [Element|RestExpanded]
+    ).
 
 % Replica um elemento N vezes
 replicate(_, 0, []).
@@ -41,8 +53,10 @@ find_king_position(Board, Row, Col) :-
 
 find_king_position_aux([], _, -1, -1).
 find_king_position_aux([Line|RestBoard], CurrentRow, Row, Col) :-
-    (find_in_line(Line, 'R', 0, Col) ->
-        Row = CurrentRow
+    find_in_line(Line, 'R', 0, FoundCol),
+    (FoundCol \= -1 ->
+        Row = CurrentRow,
+        Col = FoundCol
     ;
         NextRow is CurrentRow + 1,
         find_king_position_aux(RestBoard, NextRow, Row, Col)
